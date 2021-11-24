@@ -4,7 +4,8 @@ const {index,
     viewCategory,
     actionCreate,
     viewEdit, 
-    actionEdit
+    actionEdit,
+    actionDelete
 } = require('./controller')
 
 /* GET home page. */
@@ -13,5 +14,6 @@ router.get('/create', viewCategory);
 router.post('/create', actionCreate);
 router.get('/edit/:id', viewEdit);
 router.put('/edit/:id', actionEdit);
+router.delete('/delete/:id', actionDelete);
 
 module.exports = router
