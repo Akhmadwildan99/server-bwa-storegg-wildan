@@ -6,14 +6,15 @@ var logger = require('morgan');
 const methodOverride = require('method-override');
 var dashboardRouter = require('./app/dashboard/router');
 var categoryRouter = require('./app/category/router');
-
+const flash = require('connect-flash');
+const session = require('express-session');
 
 var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-
+app.use(flash());
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -21,7 +22,11 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/adminlte', express.static(path.join(__dirname, '/node_modules/admin-lte/')));
 app.use(methodOverride('_method'));
-
+app.use(session({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: true,
+}));
 app.use('/', dashboardRouter);
 app.use('/category', categoryRouter);
 
