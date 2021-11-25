@@ -2,7 +2,7 @@ const Category = require('./model');
 module.exports = {
     index: async(req, res) => {
         try {
-            const alretMessage = req.flash('alretMessage');
+            const alretMessage = req.flash('alertMessage');
             const alertStatus = req.flash('alertStatus');
             const alert = {message: alretMessage, status: alertStatus};  
             const category = await Category.find();
@@ -45,7 +45,7 @@ module.exports = {
     
             let category = await Category({name: name});
             await category.save(); 
-            req.flash('alretMessage', 'berhasil menambah kategori');
+            req.flash('alertMessage', 'berhasil menambah kategori');
             req.flash('alertStatus', 'success');
             res.redirect('/category');
         } catch (error) {
@@ -61,7 +61,7 @@ module.exports = {
             await Category.findOneAndUpdate({
                 _id: id
             }, {name});
-            req.flash('alretMessage', 'berhasil mengubah kategori');
+            req.flash('alertMessage', 'berhasil mengubah kategori');
             req.flash('alertStatus', 'success');
             res.redirect('/category');
         } catch (err) {
@@ -74,7 +74,7 @@ module.exports = {
         try {
             const {id} = req.params;
             await Category.findOneAndRemove({_id: id});
-            req.flash('alretMessage', 'berhasil menghapus kategori');
+            req.flash('alertMessage', 'berhasil menghapus kategori');
             req.flash('alertStatus', 'success');
             res.redirect('/category');
         } catch (err) {
