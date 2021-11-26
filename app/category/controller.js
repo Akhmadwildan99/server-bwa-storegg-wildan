@@ -32,7 +32,6 @@ module.exports = {
             res.render('admin/category/edit', {
                 category
             });
-            console.log(category);
         } catch (err) {
            req.flash('alertMessage', `${err.message}`);
            req.flash('alertStatus', 'danger');

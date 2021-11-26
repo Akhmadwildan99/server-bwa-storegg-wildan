@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
-const {index,
+const {
+    index,
     viewCategory,
     actionCreate,
     viewEdit, 
