@@ -1,4 +1,6 @@
 const Voucher = require('./model');
+const Category = require('../category/model');
+const Nominal = require('../nominal/model');
 module.exports = {
     index: async(req, res) => {
         try {
@@ -16,15 +18,21 @@ module.exports = {
            res.redirect('/voucher');
         }
     },
-    // viewCreate: async(req, res) => {
-    //     try {
-    //       res.render('admin/nominal/create');  
-    //     } catch (err) {
-    //        req.flash('alertMessage', `${err.message}`);
-    //        req.flash('alertStatus', 'danger');
-    //        res.redirect('/category');
-    //     }
-    // },
+    viewCreate: async(req, res) => {
+        try {
+            const category = await Category.find();
+            const nominal = await Nominal.find();
+            res.render('admin/voucher/create',{
+                category,
+                nominal
+            }); 
+            console.log(category);
+        } catch (err) {
+           req.flash('alertMessage', `${err.message}`);
+           req.flash('alertStatus', 'danger');
+           res.redirect('/category');
+        }
+    },
     // actionCreate: async(req, res) => {
     //     try {
     //         const {coinName, coinQuantity, price} = req.body;

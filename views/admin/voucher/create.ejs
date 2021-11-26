@@ -8,12 +8,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Nominal</h1>
+            <h1>Voucher</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="/">Home</a></li>
-              <li class="breadcrumb-item"><a href="/category">Nominal</a></li>
+              <li class="breadcrumb-item"><a href="/voucher">Voucher</a></li>
               <li class="breadcrumb-item active">Tambah</li>
             </ol>
           </div>
@@ -28,28 +28,34 @@
           <div class="col-12">
             <div class="card card-primary">
                 <div class="card-header">
-                  <h3 class="card-title">Form tambah Nominal</h3>
+                  <h3 class="card-title">Form tambah Voucher</h3>
                 </div>
                 <!-- /.card-header -->
                 <!-- form start -->
-                <form action='/nominal/create' method="post">
+                <form action='/voucher/create' method="post">
                   <div class="card-body">
                     <div class="form-group">
-                        <label for="coinName">Pilihan</label>
-                        <select class="form-control select2" name="coinName" style="width: 100%;">
-                          <option selected="selected">Pilih koin</option>
-                          <option value="Gold">Gold</option>
-                          <option value="Diamond">Diamond</option>
-                          <option value"Jewel">Jewel</option>
+                        <label for="name">Nama koin</label>
+                        <input type="text" name="name" class="form-control" id="name" placeholder="Masukan nama Koin">
+                    </div>
+                    <div class="form-group">
+                        <label for="category">Pilih Kategori</label>
+                        <select class="form-control select2" name="category" style="width: 100%;">
+                            <option selected="selected">Pilih kategori</option>
+                            <% category.forEach(categori => { %>
+                                <option value="<%= categori._id %>"><%= categori.name%></option>
+                            <% }) %>
                         </select>
                     </div>
                     <div class="form-group">
-                      <label for="coinQuantity">Jumlah koin</label>
-                      <input type="number" name="coinQuantity" class="form-control" id="coinQuantity" placeholder="Masukan jumlah koin">
-                    </div>
-                    <div class="form-group">
-                      <label for="price">Harga</label>
-                      <input type="number" name="price" class="form-control" id="price" placeholder="Masukan harga">
+                        <label for="nominal">Pilih Nominal</label>
+                        <div class="select2-purple" >
+                            <select class="form-control select2" multiple="multiple" name="nominal" data-placeholder="masukan pilihan nominal" style="width: 100%;" >
+                                <% nominal.forEach(nominal => { %>
+                                    <option value="<%= nominal._id %>"><%= nominal.coinName%> <%= nominal.price%></option>
+                                <% }) %>
+                            </select>
+                        </div>
                     </div>
                   </div>
                   <!-- /.card-body -->
