@@ -13,15 +13,15 @@ let voucherSchema = mongoose.Schema({
         type: String
     },
     category: {
-        type: mongoose.Schema.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Category'
     },
-    nominal: {
-        type: mongoose.Schema.ObjectId,
+    nominals: [{
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Nominal'
-    },
+    }],
     user: {
-        type: mongoose.Schema.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     }
 });

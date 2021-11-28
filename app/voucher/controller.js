@@ -2,6 +2,8 @@ const Voucher = require('./model');
 const Category = require('../category/model');
 const Nominal = require('../nominal/model');
 const config = require('../../config/index');
+const fs = require('fs');
+const path = require('path');
 module.exports = {
     index: async(req, res) => {
         try {
@@ -38,21 +40,48 @@ module.exports = {
             const {name, category, nominals} = req.body;
             if(req.file) {
                 let tmp_path = req.file.path;
-                console.log("temp_path>>", tmp_path);
-                let originalExt = req.file.originalname.split('.')[req.file.originalname.length - 1];
-                console.log("originalExt>>", originalExt);
+                let originalExt = req.file.originalname.split('.')[req.file.originalname.split(".").length - 1];
                 let filename = req.file.filename + "." + originalExt;
-                let target_path = path.resolve(config.rootPath, `../../public/uploads/${filename}`);
+                let target_path = path.resolve(config.rootPath, `public/uploads/${filename}`);
+
+                const src = fs.createReadStream(tmp_path);
+                const dst = fs.createWriteStream(target_path);
+
+                src.pipe(dst);
+
+                src.on('end', async () => {
+                    try {
+                        const voucher = new Voucher({
+                            name,
+                            category,
+                            nominals,
+                            thumbnial: filename
+                        });
+                        await voucher.save();
+                        req.flash('alertMessage', 'berhasil menambah voucher');
+                        req.flash('alertStatus', 'success');
+                        res.redirect('/voucher');
+                    } catch (err) {
+                        req.flash('alertMessage', `${err.message}`);
+                        req.flash('alertStatus', 'danger');
+                        res.redirect('/voucher');
+                    }
+                });
+            } else {
+                const voucher = new Voucher({
+                    name,
+                    category,
+                    nominals
+                });
+                await voucher.save();
+                req.flash('alertMessage', 'berhasil menambah voucher');
+                req.flash('alertStatus', 'success');
+                res.redirect('/voucher');
             }
-            // let nominal = await Nominal({coinName, coinQuantity, price});
-            // await nominal.save(); 
-            // req.flash('alertMessage', 'berhasil menambah Nominal');
-            // req.flash('alertStatus', 'success');
-            // res.redirect('/nominal');
-        } catch (error) {
+        } catch (err) {
            req.flash('alertMessage', `${err.message}`);
            req.flash('alertStatus', 'danger');
-           res.redirect('/nominal');
+           res.redirect('/voucher');
         }
     },
     // viewEdit: async(req, res) => {
