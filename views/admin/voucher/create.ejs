@@ -32,11 +32,11 @@
                 </div>
                 <!-- /.card-header -->
                 <!-- form start -->
-                <form action='/voucher/create' method="post">
+                <form action='/voucher/create' method="post" enctype="multipart/form-data">
                   <div class="card-body">
                     <div class="form-group">
-                        <label for="name">Nama koin</label>
-                        <input type="text" name="name" class="form-control" id="name" placeholder="Masukan nama Koin">
+                        <label for="name">Nama game</label>
+                        <input type="text" name="name" class="form-control" id="name" placeholder="Masukan nama game">
                     </div>
                     <div class="form-group">
                         <label for="category">Pilih Kategori</label>
@@ -48,15 +48,21 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="nominal">Pilih Nominal</label>
+                        <label for="nominals">Pilih Nominal</label>
                         <div class="select2-purple" >
-                            <select class="form-control select2" multiple="multiple" name="nominal" data-placeholder="masukan pilihan nominal" style="width: 100%;" >
+                            <select class="form-control select2" multiple="multiple" name="nominals" data-placeholder="masukan pilihan nominal" style="width: 100%;" >
                                 <% nominal.forEach(nominal => { %>
                                     <option value="<%= nominal._id %>"><%= nominal.coinName%> <%= nominal.price%></option>
                                 <% }) %>
                             </select>
                         </div>
                     </div>
+                    <div class="form-group">
+                      <label for="image">Gambar</label>
+                      <input type="file" name="image" class="form-control" id="image" placeholder="Masukan thumbnail" required>
+                      <br />
+                      <img src="" id="perview">
+                  </div>
                   </div>
                   <!-- /.card-body -->
   
@@ -76,3 +82,24 @@
   </div>
   <%- include('../../partials/footer.ejs') %> 
   <%- include('../../partials/js.ejs') %> 
+
+  <script>
+    function readURL(event) {
+      if(event.files && event.files[0]) {
+        const reader = new FileReader();
+        console.log(event.files[0])
+        reader.onload = function(e){
+          $('#perview').attr('src', e.target.result);
+          $('#perview').attr('width', "20%");
+          $('#perview').attr('height', "20%");
+          console.log(e.target.result);
+        }
+        reader.readAsDataURL(event.files[0]);
+      }
+
+    }
+
+    $('#image').change(function() {
+      readURL(this);
+    })
+  </script>

@@ -1,6 +1,7 @@
 const Voucher = require('./model');
 const Category = require('../category/model');
 const Nominal = require('../nominal/model');
+const config = require('../../config/index');
 module.exports = {
     index: async(req, res) => {
         try {
@@ -26,28 +27,34 @@ module.exports = {
                 category,
                 nominal
             }); 
-            console.log(category);
         } catch (err) {
            req.flash('alertMessage', `${err.message}`);
            req.flash('alertStatus', 'danger');
            res.redirect('/category');
         }
     },
-    // actionCreate: async(req, res) => {
-    //     try {
-    //         const {coinName, coinQuantity, price} = req.body;
-    
-    //         let nominal = await Nominal({coinName, coinQuantity, price});
-    //         await nominal.save(); 
-    //         req.flash('alertMessage', 'berhasil menambah Nominal');
-    //         req.flash('alertStatus', 'success');
-    //         res.redirect('/nominal');
-    //     } catch (error) {
-    //        req.flash('alertMessage', `${err.message}`);
-    //        req.flash('alertStatus', 'danger');
-    //        res.redirect('/nominal');
-    //     }
-    // },
+    actionCreate: async(req, res) => {
+        try {
+            const {name, category, nominals} = req.body;
+            if(req.file) {
+                let tmp_path = req.file.path;
+                console.log("temp_path>>", tmp_path);
+                let originalExt = req.file.originalname.split('.')[req.file.originalname.length - 1];
+                console.log("originalExt>>", originalExt);
+                let filename = req.file.filename + "." + originalExt;
+                let target_path = path.resolve(config.rootPath, `../../public/uploads/${filename}`);
+            }
+            // let nominal = await Nominal({coinName, coinQuantity, price});
+            // await nominal.save(); 
+            // req.flash('alertMessage', 'berhasil menambah Nominal');
+            // req.flash('alertStatus', 'success');
+            // res.redirect('/nominal');
+        } catch (error) {
+           req.flash('alertMessage', `${err.message}`);
+           req.flash('alertStatus', 'danger');
+           res.redirect('/nominal');
+        }
+    },
     // viewEdit: async(req, res) => {
     //     try {
     //         const {id} = req.params;
