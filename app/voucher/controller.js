@@ -10,7 +10,10 @@ module.exports = {
             const alretMessage = req.flash('alertMessage');
             const alertStatus = req.flash('alertStatus');
             const alert = {message: alretMessage, status: alertStatus};  
-            const voucher = await Voucher.find();
+            const voucher = await Voucher.find()
+            .populate('category')
+            .populate('nominals');
+            console.log(voucher);
             res.render('admin/voucher/view_voucher', {
                 voucher,
                 alert
