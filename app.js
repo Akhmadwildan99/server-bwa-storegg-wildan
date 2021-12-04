@@ -9,6 +9,7 @@ var categoryRouter = require('./app/category/router');
 var nominalRouter = require('./app/nominal/router');
 var voucherRouter = require('./app/voucher/router');
 var bankRouter = require('./app/bank/router');
+var paymentRouter = require('./app/payment/router');
 const flash = require('connect-flash');
 const session = require('express-session');
 
@@ -35,6 +36,7 @@ app.use('/category', categoryRouter);
 app.use('/nominal', nominalRouter);
 app.use('/voucher', voucherRouter);
 app.use('/bank', bankRouter);
+app.use('/payment', paymentRouter);
 
 
 // catch 404 and forward to error handler
