@@ -10,6 +10,7 @@ var nominalRouter = require('./app/nominal/router');
 var voucherRouter = require('./app/voucher/router');
 var bankRouter = require('./app/bank/router');
 var paymentRouter = require('./app/payment/router');
+const routerSignin = require('./app/users/router');
 const flash = require('connect-flash');
 const session = require('express-session');
 
@@ -31,7 +32,8 @@ app.use(session({
   resave: false,
   saveUninitialized: true,
 }));
-app.use('/', dashboardRouter);
+app.use("/", routerSignin)
+app.use('/dashboard', dashboardRouter);
 app.use('/category', categoryRouter);
 app.use('/nominal', nominalRouter);
 app.use('/voucher', voucherRouter);
