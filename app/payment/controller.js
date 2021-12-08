@@ -9,7 +9,9 @@ module.exports = {
             const payment = await Payment.find().populate('banks');
             res.render('admin/payment/view_payment', {
                 payment,
-                alert
+                alert,
+                name: req.session.user.username,
+                title: "Halaman Jenis pembayaran"
             });
         } catch (err) {
            req.flash('alertMessage', `${err.message}`);
@@ -21,7 +23,9 @@ module.exports = {
         try {
           const banks = await Bank.find();
           res.render('admin/payment/create', {
-              banks
+              banks,
+              name: req.session.user.username,
+              title: "Halaman create jenis pembayaran"
           });  
         } catch (err) {
            req.flash('alertMessage', `${err.message}`);
@@ -51,7 +55,9 @@ module.exports = {
             const banks = await Bank.find();
             res.render('admin/payment/edit', {
                 banks,
-                payment
+                payment,
+                name: req.session.user.username,
+                title: "Halaman ubah  jenis pembayaran"
             });
         } catch (err) {
            req.flash('alertMessage', `${err.message}`);

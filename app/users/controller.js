@@ -7,12 +7,13 @@ module.exports = {
             const alertStatus = req.flash('alertStatus');
             const alert = {message: alretMessage, status: alertStatus};
             if (req.session.user === null || req.session.user === undefined) {
-            res.render('admin/users/view_signin', {
-                alert
-            });
-        } else {
-            res.redirect('/dashboard');
-        } 
+                res.render('admin/users/view_signin', {
+                    alert,
+                    title: "Halaman signin"
+                });
+            } else {
+                res.redirect('/dashboard');
+            } 
         } catch (err) {
            req.flash('alertMessage', `${err.message}`);
            req.flash('alertStatus', 'danger');
@@ -23,7 +24,7 @@ module.exports = {
         try {
             const {email, password} = req.body;
 
-            const check = await User.findOne({email});
+            const check = await User.findOne({email: email});
             console.log(check.email)
             if (check) {
                 if (check.status === 'Y') {
@@ -56,5 +57,9 @@ module.exports = {
            req.flash('alertStatus', 'danger');
            res.redirect('/'); 
         }
+    },
+    actionLogout: (req, res) => {
+        req.session.destroy();
+        res.redirect('/');
     }
 }

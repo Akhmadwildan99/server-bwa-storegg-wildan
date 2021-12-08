@@ -16,7 +16,9 @@ module.exports = {
             console.log(voucher);
             res.render('admin/voucher/view_voucher', {
                 voucher,
-                alert
+                alert,
+                name: req.session.user.username,
+                title: "Halaman voucher"
             });
         } catch (err) {
            req.flash('alertMessage', `${err.message}`);
@@ -30,7 +32,9 @@ module.exports = {
             const nominal = await Nominal.find();
             res.render('admin/voucher/create',{
                 category,
-                nominal
+                nominal,
+                name: req.session.user.username,
+                title: "Halaman create voucher"
             }); 
         } catch (err) {
            req.flash('alertMessage', `${err.message}`);
@@ -98,12 +102,14 @@ module.exports = {
             res.render('admin/voucher/edit', {
                 nominal,
                 voucher,
-                category
+                category,
+                name: req.session.user.username,
+                title: "Halaman ubah voucher"
             });
         } catch (err) {
            req.flash('alertMessage', `${err.message}`);
            req.flash('alertStatus', 'danger');
-           res.redirect('/nominal');
+           res.redirect('/voucher');
         }
     },
     actionEdit: async(req, res) => {
