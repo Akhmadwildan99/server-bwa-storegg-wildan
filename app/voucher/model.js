@@ -9,7 +9,7 @@ let voucherSchema = mongoose.Schema({
         enum: ['Y', 'N'],
         default: 'Y'
     },
-    thumbnial: {
+    thumbnail: {
         type: String
     },
     category: {

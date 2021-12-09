@@ -25,7 +25,6 @@ module.exports = {
             const {email, password} = req.body;
 
             const check = await User.findOne({email: email});
-            console.log(check.email)
             if (check) {
                 if (check.status === 'Y') {
                     const checkPasswod = await bcrypt.compare(password, check.password);
