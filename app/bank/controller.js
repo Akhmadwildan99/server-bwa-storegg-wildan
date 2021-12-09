@@ -32,9 +32,9 @@ module.exports = {
     },
     actionCreate: async(req, res) => {
         try {
-            const {name, nameBank, noRekening} = req.body;
+            const {name, bankName, noRekening} = req.body;
     
-            let bank = await Bank({name, nameBank, noRekening});
+            let bank = await Bank({name, bankName, noRekening});
             await bank.save(); 
             req.flash('alertMessage', 'berhasil menambah bank');
             req.flash('alertStatus', 'success');
@@ -63,10 +63,10 @@ module.exports = {
     actionEdit: async(req, res) => {
         try {
             const {id} = req.params;
-            const {name, nameBank, noRekening} = req.body;
+            const {name, bankName, noRekening} = req.body;
             await Bank.findOneAndUpdate({
                 _id: id
-            }, {name, nameBank, noRekening});
+            }, {name, bankName, noRekening});
             req.flash('alertMessage', 'berhasil mengubah bank');
             req.flash('alertStatus', 'success');
             res.redirect('/bank');

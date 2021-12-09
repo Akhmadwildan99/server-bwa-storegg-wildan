@@ -28,7 +28,7 @@
           <div class="col-12">
             <div class="card card-primary">
                 <div class="card-header">
-                  <h3 class="card-title">Form Ubah Bank  "<%= bank.nameBank %>" </h3>
+                  <h3 class="card-title">Form Ubah Bank  "<%= bank.bankName %>" </h3>
                 </div>
                 <!-- /.card-header -->
                 <!-- form start -->
@@ -39,26 +39,26 @@
                       <input type="text" value="<%= bank.name %>" name="name" class="form-control" id="name" placeholder="Masukan nama pemilik" required>
                     </div>
                     <div class="form-group">
-                      <label for="nameBank">Nama Bank Pemilik</label>
-                      <select class="form-control select2" name="nameBank" style="width: 100%;">
+                      <label for="bankName">Nama Bank Pemilik</label>
+                      <select class="form-control select2" name="bankName" style="width: 100%;">
                         <!-- <option selected="selected">Pilih Bank</option> -->
                         <option value="BCA"
-                            <% if (bank.nameBank === "BCA") { %>
+                            <% if (bank.bankName === "BCA") { %>
                                 selected
                             <% } %>
                         >BCA</option>
                         <option value="BRI"
-                            <% if (bank.nameBank === "BRI") { %>
+                            <% if (bank.bankName === "BRI") { %>
                                 selected
                             <% } %>
                         >BRI</option>
                         <option value"BNI"
-                            <% if (bank.nameBank === "BNI") { %>
+                            <% if (bank.bankName === "BNI") { %>
                                 selected
                             <% } %>
                         >BNI</option>
                         <option value"MANDIRI"
-                        <% if (bank.nameBank === "MANDIRI") { %>
+                        <% if (bank.bankName === "MANDIRI") { %>
                             selected
                         <% } %>
                         >MANDIRI</option>
