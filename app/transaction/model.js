@@ -38,10 +38,15 @@ let transactionSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Player'
     },
+    status: {
+        type: String,
+        enum: ['pending', 'success', 'failed'],
+        default: 'pending'
+    },
     historyUser: {
         name: {type: String, require: [ true, 'nama harus disi']},
         phoneNumber: {
-            type: String,
+            type: Number,
             require: [true, 'nomor akun harus disi!'],
             maxlength: [13, 'panjang nomor antara 9 - 13'],
             minlength: [9, 'panjang nomor antara 9 -  13']
