@@ -12,10 +12,14 @@ var bankRouter = require('./app/bank/router');
 var paymentRouter = require('./app/payment/router');
 var transactionRouter = require('./app/transaction/router');
 const routerSignin = require('./app/users/router');
+const playerRouter = require('./app/player/router');
 const flash = require('connect-flash');
 const session = require('express-session');
 
 var app = express();
+
+//URL
+const URL = '/api/v1'
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -41,6 +45,9 @@ app.use('/voucher', voucherRouter);
 app.use('/bank', bankRouter);
 app.use('/payment', paymentRouter);
 app.use('/transaction', transactionRouter);
+
+// API
+app.use(`${URL}/players`, playerRouter);
 
 
 // catch 404 and forward to error handler
