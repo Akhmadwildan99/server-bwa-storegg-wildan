@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 let playerSchema = mongoose.Schema({
     email: {
         type: String,
@@ -14,7 +15,7 @@ let playerSchema = mongoose.Schema({
 
     username: {
         type: String,
-        require: [true, 'Nama harus diisi!'],
+        require: [true, 'Username harus diisi!'],
         maxlength: [225, 'panjang username harus diantara 3 - 225 karakter'],
         minlength: [3, 'panjang username harus diantara 3 - 225 karakter'],
     },
@@ -47,7 +48,28 @@ let playerSchema = mongoose.Schema({
 
     avatar: {
         type: String
+    },
+    filename: {
+        type: String
+    },
+    favorite: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Category'
     }
 }, {timestamps: true});
+
+playerSchema.path('email').validate( async function(value) {
+    try {
+        const count = await this.model('Player').countDocuments({email: value});
+        return !count
+    } catch (err) {
+        throw err;
+    }
+})
+
+playerSchema.pre("save", function(next) {
+    this.password = bcrypt.hashSync(this.password, 10);
+    next();
+})
 
 module.exports = mongoose.model('Player', playerSchema);
