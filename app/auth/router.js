@@ -1,7 +1,8 @@
 var express = require('express');
 var router = express.Router();
 const {
-    signup
+    signup,
+    signin
 } = require('./controller');
 const multer = require('multer');
 const os = require('os');
@@ -9,6 +10,7 @@ const os = require('os');
 
 /* GET home page. */
 router.post('/signup', multer({dest: os.tmpdir()}).single('image'), signup);
+router.post('/signin', signin);
 
 
 
