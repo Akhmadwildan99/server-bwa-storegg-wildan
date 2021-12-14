@@ -46,7 +46,7 @@ module.exports = {
 
     checkout: async (req, res) => {
         try {
-            const { voucher, nominal, bank, accountUser, payment } = req.body;
+            const { voucher, nominal, bank, accountUser, payment, name} = req.body;
 
             const res_voucher = await Voucher.findOne({_id: voucher})
                 .select('_id name category thumbnail')
@@ -68,6 +68,9 @@ module.exports = {
             if(!res_bank) return res.status(404).json({message: 'Bank tidak ditemukan'});
 
 
+            let tax = (10 / 100) * res_nominal._doc.price;
+            let value = res_nominal._doc.price + tax;
+
             const payload = {
                 historyVoucherTopup: {
                     gameName: res_voucher._doc.name,
@@ -84,7 +87,17 @@ module.exports = {
                     noRekening: res_bank._doc.noRekening,
                 },
 
-                name: req.player.name
+                name: name,
+                accountUser: accountUser,
+                player: req.player.id,
+                tax: tax,
+                value: value,
+                historyUser: {
+                    name: req.player.name,
+                    phoneNumber: req.player.phoneNumber,
+                },
+                category: res_voucher._doc.category?._id,
+                user: res_voucher._doc.user?._id,
             }
 
             res.status(200).send({data: payload});

@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 let userSchema = mongoose.Schema({
     email: {
         type: String,
-        require: [true, 'JEmail harus diisi!']
+        require: [true, 'Email harus diisi!']
     },
     username: {
         type: String,
