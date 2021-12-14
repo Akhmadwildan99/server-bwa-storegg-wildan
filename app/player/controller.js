@@ -1,5 +1,8 @@
 const Voucher = require('../voucher/model');
 const Category = require('../category/model');
+const Nominal = require('../nominal/model');
+const Payment = require('../payment/model');
+const Bank = require('../bank/model');
 module.exports = {
     landingPage: async(req, res) => {
         try {
@@ -36,6 +39,56 @@ module.exports = {
             const category = await Category.find();
             
             res.status(200).send({data: category})
+        } catch (err) {
+            res.status(500).send(err.message || 'internal sever error');
+        }
+    },
+
+    checkout: async (req, res) => {
+        try {
+            const { voucher, nominal, bank, accountUser, payment } = req.body;
+
+            const res_voucher = await Voucher.findOne({_id: voucher})
+                .select('_id name category thumbnail')
+                .populate('category')
+                .populate('user')
+            
+            if(!res_voucher) return res.status(404).json({message: 'Voucher tidak ditemukan'});
+
+            const res_nominal = await Nominal.findOne({_id: nominal});
+
+            if(!res_nominal) return res.status(404).json({message: 'Nominal tidak ditemukan'});
+
+            const res_payment = await Payment.findOne({_id: payment});
+
+            if(!res_payment) return res.status(404).json({message: 'Payment tidak ditemukan'});
+
+            const res_bank = await Bank.findOne({_id: bank});
+
+            if(!res_bank) return res.status(404).json({message: 'Bank tidak ditemukan'});
+
+
+            const payload = {
+                historyVoucherTopup: {
+                    gameName: res_voucher._doc.name,
+                    category: res_voucher._doc.category,
+                    thumbnail: res_voucher._doc.thumbnail,
+                    coinName: res_nominal._doc.coinName,
+                    coinQuantity: res_nominal._doc.coinQuantity,
+                    price: res_nominal._doc.price
+                },
+                historyPayment: {
+                    name: res_bank._doc.name,
+                    type: res_payment._doc.type,
+                    bankName: res_bank._doc.bankName,
+                    noRekening: res_bank._doc.noRekening,
+                },
+
+                name: req.player.name
+            }
+
+            res.status(200).send({data: payload});
+
         } catch (err) {
             res.status(500).send(err.message || 'internal sever error');
         }

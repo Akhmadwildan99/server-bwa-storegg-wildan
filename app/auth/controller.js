@@ -38,7 +38,6 @@ module.exports = {
                         }
 
                         next(err);
-                        console.log(err)
                     }
                 });
 
