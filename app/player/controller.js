@@ -110,5 +110,45 @@ module.exports = {
         } catch (err) {
             res.status(500).send(err.message || 'internal sever error');
         }
+    },
+
+    detailHistory: async (req, res) => {
+        try {
+            const {status = ''} = req.query;
+            
+            let criteria = {};
+
+            if(status.length) {
+                criteria = {
+                    ...criteria,
+                    status: {$regex : `${status}`, $options : 'i'}
+                }
+            }
+
+            if(req.player._id) {
+                criteria = {
+                    ...criteria,
+                    player: req.player._id
+                }
+            }
+
+            const history = await Transaction.find(criteria);
+
+            let total = await Transaction.aggregate([
+                { $match: criteria },
+                {$group: {
+                    _id: null,
+                    value: { $sum: "$value" }
+                }}
+            ]);
+            // console.log(total);
+            res.status(200).send({
+                data: history, 
+                total: total.length ? total[0].value : 0
+            });
+
+        } catch (err) {
+            res.status(500).send(err.message || 'internal sever error'); 
+        }
     }
 }
