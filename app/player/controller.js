@@ -3,6 +3,7 @@ const Category = require('../category/model');
 const Nominal = require('../nominal/model');
 const Payment = require('../payment/model');
 const Bank = require('../bank/model');
+const Transaction = require('../transaction/model');
 module.exports = {
     landingPage: async(req, res) => {
         try {
@@ -46,7 +47,7 @@ module.exports = {
 
     checkout: async (req, res) => {
         try {
-            const { voucher, nominal, bank, accountUser, payment, name} = req.body;
+            const { voucher, nominal, bank, accountUser, payment } = req.body;
 
             const res_voucher = await Voucher.findOne({_id: voucher})
                 .select('_id name category thumbnail')
@@ -74,7 +75,7 @@ module.exports = {
             const payload = {
                 historyVoucherTopup: {
                     gameName: res_voucher._doc.name,
-                    category: res_voucher._doc.category,
+                    category: res_voucher.category._doc.name,
                     thumbnail: res_voucher._doc.thumbnail,
                     coinName: res_nominal._doc.coinName,
                     coinQuantity: res_nominal._doc.coinQuantity,
@@ -87,7 +88,7 @@ module.exports = {
                     noRekening: res_bank._doc.noRekening,
                 },
 
-                name: name,
+                name: req.player.name,
                 accountUser: accountUser,
                 player: req.player.id,
                 tax: tax,
@@ -100,7 +101,11 @@ module.exports = {
                 user: res_voucher._doc.user?._id,
             }
 
-            res.status(200).send({data: payload});
+            let checkout = new Transaction(payload);
+            
+            await checkout.save();
+
+            res.status(200).send({data: checkout});
 
         } catch (err) {
             res.status(500).send(err.message || 'internal sever error');

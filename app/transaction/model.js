@@ -5,7 +5,7 @@ let transactionSchema = mongoose.Schema({
         category: {type: String, require: [true, 'kategori game harus diisi!']},
         thumbnail: {type: String},
         coinName: {type: String, require: [true, 'nama koin harus diisi!']},
-        coinName: {type: String, require: [true, 'jumlah koin harus diisi!']},
+        coinQuantity: {type: Number, require: [true, 'jumlah koin harus diisi!']},
         price: {type: Number}
     },
     historyPayment: {

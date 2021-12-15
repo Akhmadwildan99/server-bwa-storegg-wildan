@@ -20,7 +20,6 @@ module.exports = {
             const data = jwt.verify(token, config.jwtKey);
 
             const player = await Player.findOne({_id: data.player.id});
-            console.log(player)
 
             if(!player) {
                 throw new Error();
