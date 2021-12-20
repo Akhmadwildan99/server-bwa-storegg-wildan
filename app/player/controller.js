@@ -3,7 +3,12 @@ const Category = require('../category/model');
 const Nominal = require('../nominal/model');
 const Payment = require('../payment/model');
 const Bank = require('../bank/model');
+const Player = require('./model');
 const Transaction = require('../transaction/model');
+const fs = require('fs');
+const path = require('path');
+const config = require('../../config/index');
+
 module.exports = {
     landingPage: async(req, res) => {
         try {
@@ -196,6 +201,95 @@ module.exports = {
             res.status(200).json({ data: history, count: count });
         } catch (err) {
             res.status(500).send(err.message || 'internal sever error'); 
+        }
+    },
+
+    profile: async (req, res) => {
+        try {
+           const player = {
+               id: req.player._id,
+               username: req.player.username,
+               email: req.player.email,
+               avatar: req.player.avatar,
+               phoneNumber: req.player.phoneNumber,
+               name: req.player.name
+           } 
+
+           res.status(200).json({ data: player});
+        } catch (err) {
+            res.status(500).send(err.message || 'internal sever error');
+        }
+    },
+
+    editProfile: async(req, res, next) => {
+        try {
+            const {name = "", phoneNumber = ""} = req.body;
+            const payload = {};
+
+            if(name.length) payload.name = name;
+            if(phoneNumber.length) payload.phoneNumber = phoneNumber;
+            if (req.file) {
+                let tmp_path = req.file.path;
+                let originalExt = req.file.originalname.split('.')[req.file.originalname.split(".").length - 1];
+                let filename = req.file.filename + "." + originalExt;
+                let target_path = path.resolve(config.rootPath, `public/uploads/${filename}`);
+
+                const src = fs.createReadStream(tmp_path);
+                const dst = fs.createWriteStream(target_path);
+
+                src.pipe(dst);
+
+                src.on('end', async () => {
+                    try {
+                        const player = await Player.findOne({_id: req.player._id});
+                        const currentImage = `${config.rootPath}/public/uploads/${player.avatar}`;
+
+                        if(fs.existsSync(currentImage)) {
+                            fs.unlinkSync(currentImage);
+                        }
+                        const playerUpdate = await Player.findByIdAndUpdate({
+                            _id: req.player._id
+                        }, {...payload, avatar: filename}, {new: true, runValidators: true});
+
+                        res.status(200).json({
+                            data: {
+                                id: playerUpdate._id,
+                                name: playerUpdate.name,
+                                phoneNumber: playerUpdate.phoneNumber,
+                                email: playerUpdate.email,
+                                avatar: playerUpdate.avatar,
+                            }
+                        });
+                    } catch (err) {
+                        if (err && err.name === 'validationError') {
+                            res.status(422).json({
+                                error: 1,
+                                message: err.message
+                            })
+                        }
+
+                        next(err);
+                    }
+                });
+            } else {
+                const player = await Player.findByIdAndUpdate(
+                    {_id: req.player._id},
+                    payload,
+                    {new: true, runValidators: true}
+                );
+                
+                res.status(200).json({
+                    data: {
+                        id: player._id,
+                        name: player.name,
+                        phoneNumber: player.phoneNumber,
+                        email: player.email,
+                        avatar: player.avatar,
+                    }
+                });
+            }
+        } catch (err) {
+            res.status(500).send(err.message || 'internal sever error');
         }
     }
 }
